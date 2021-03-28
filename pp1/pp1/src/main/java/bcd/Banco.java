@@ -75,24 +75,26 @@ public abstract class Banco {
     }
 
     public static int adicionarCarrinho(Usuario usuario, String data){
-        int resultado = -1;
-//        String query = "INSERT INTO Usuario (nome, Cat_Usuario_idCat_Usuario) VALUES ("
-//                + "'Deborah'," + 2 + ")";
         String query = "INSERT INTO Carrinho (data, idCliente) "+
                 "VALUES ('"+data+"', "+usuario.getId()+")";
         PreparedStatement stmt = null;
+        int resultado = -1;
         try {
             stmt = ConnectionFactory.getDBConnection().prepareStatement(query);
-            resultado = stmt.executeUpdate(query);
-            System.out.println("RESULTADO: "+resultado);
+            stmt.executeUpdate(query);
+            query = "SELECT max(LAST_INSERT_ID(idCarrinho)) id FROM Carrinho";
+            stmt = ConnectionFactory.getDBConnection().prepareStatement(query);
+            ResultSet rs = stmt.executeQuery(query);
+            rs.next();
+            resultado = rs.getInt("id");
         } catch (SQLException throwables) {
             throwables.printStackTrace();
         }
         return resultado;
     }
 
-    public static boolean adicionarCompras(Usuario u, Produto p, int carrinho){
-        boolean resultado = false;
+    public static int adicionarCompras(Usuario u, Produto p, int carrinho){
+        int resultado = -1;
         String query = "INSERT INTO Compra(Produto_idProduto, Produto_idVendedor, "+
                 "Carrinho_idCarrinho, Carrinho_idCliente, unidades, entrega) "+
                 "VALUES ("+p.getId()+", "+p.getIdVendedor()+", "+carrinho+", "+
@@ -100,56 +102,12 @@ public abstract class Banco {
         PreparedStatement stmt = null;
         try {
             stmt = ConnectionFactory.getDBConnection().prepareStatement(query);
-            ResultSet rs = stmt.executeQuery();
-            if (rs.next()){
-                System.out.println("\nCarrinho "+rs.getInt("idCarrinho"));
-                resultado=true;
-            }else {
-                System.out.println("CARRINHO VAZIO");
-            }
+            resultado = stmt.executeUpdate();
+
         } catch (SQLException throwables) {
             throwables.printStackTrace();
         }
         return resultado;
     }
 
-    public static boolean procurarCarrinho(int id){
-        boolean resultado = false;
-        String query = "SELECT * FROM Carrinho NATURAL JOIN Usuario WHERE idCarrinho="+id+"";
-        PreparedStatement stmt = null;
-        try {
-            stmt = ConnectionFactory.getDBConnection().prepareStatement(query);
-            ResultSet rs = stmt.executeQuery();
-            if (rs.next()){
-                System.out.println("\nCarrinho "+rs.getInt("idCarrinho"));
-                resultado=true;
-            }else {
-                System.out.println("Carrinho vazio");
-            }
-        } catch (SQLException throwables) {
-            throwables.printStackTrace();
-        }
-        return resultado;
-    }
-
-
-
-    public static boolean mostrarCarrinho(int carrinho){
-        boolean resultado = false;
-        String query = "SELECT * FROM Carrinho WHERE idCarrinho="+carrinho+"";
-        PreparedStatement stmt = null;
-        try {
-            stmt = ConnectionFactory.getDBConnection().prepareStatement(query);
-            ResultSet rs = stmt.executeQuery();
-            if (rs.next()){
-                System.out.println("\nCarrinho "+rs.getInt("idCarrinho"));
-                resultado=true;
-            }else {
-                System.out.println("Carrinho vazio");
-            }
-        } catch (SQLException throwables) {
-            throwables.printStackTrace();
-        }
-        return resultado;
-    }
 }

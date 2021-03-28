@@ -47,9 +47,8 @@ public class Principal {
             ":::::::::::::::::::::::::\n",
             "..::   OLÁ VENDEDOR  ::..\n",
             "..::   Gostaria de   ::..\n",
-            "1 - Ver ofertas\n",
-            "2 - Ver carrinho\n\n",
-            "3 - Sair do menu Cliente\n\n",
+            "1 - Ver pedidos\n\n",
+            "2 - Sair do menu Vendedor\n\n",
             ">> "
     };
     private final String[] PRODUTOS = {
@@ -202,6 +201,7 @@ public class Principal {
                     produtos.forEach(produto -> {
                         Banco.adicionarCompras(this.usuario, produto, carrinho);
                     });
+                    this.produtos.clear();
                     return;
                 case 2:
 //                    System.out.println("Opção 2: cancelar carrinho");
@@ -217,9 +217,19 @@ public class Principal {
 
 
     private void menuVendedor(){
-        System.out.println("Menu VENDEDOR");
-        System.out.println("OPÇÃO 1: VER PEDIDOS");
-        System.out.println("OPÇÃO 2: SAIR");
+        int opcao = -1;
+        do {
+            for (String linha : this.VENDEDOR) System.out.print(linha);
+            opcao = this.teclado.nextInt();
+            switch (opcao) {
+                case 1:
+                    System.out.println("Opção 1: ver pedidos");
+                    break;
+                case 2:
+                    System.out.println("Opção 2: sair");
+                    break;
+            }
+        } while (opcao != 2);
     }
 
 
