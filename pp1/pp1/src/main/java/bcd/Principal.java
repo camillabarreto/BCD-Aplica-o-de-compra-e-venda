@@ -174,6 +174,7 @@ public class Principal {
     private void menuCarregandoCarrinho(){
         for (String linha : this.CARREGAR_CARRINHO) System.out.print(linha);;
         String pd = this.teclado.next();
+        StringBuilder sb = new StringBuilder();
         String[] pdv = pd.split(",");
         for (int i = 0; i < pdv.length; i++) {
             //verificar se produto é valido
@@ -181,9 +182,10 @@ public class Principal {
             if (produto != null) {
                 this.produtos.add(produto);
             } else {
-                System.out.println("INVÁLIDO: " + pdv[i]);
+                sb.append("\nINVÁLIDO: " + pdv[i]);
             }
         }
+        if(sb.length()>0) System.out.println(sb.toString()); this.sleep();
     }
 
     private void menuCarrinho(){
@@ -264,6 +266,6 @@ public class Principal {
     }
 
     private void sleep(){
-        try { Thread.sleep (1000); } catch (InterruptedException ex) {}
+        try { Thread.sleep (1500); } catch (InterruptedException ex) {}
     }
 }
