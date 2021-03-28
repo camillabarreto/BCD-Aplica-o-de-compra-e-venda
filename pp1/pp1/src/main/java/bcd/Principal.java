@@ -80,7 +80,7 @@ public class Principal {
     private final String[] COMPRAR = {
             "1 - Confirmar sua compra\n",
             "2 - Esvaziar o carrinho\n",
-            "3 - Sair\n",
+            "3 - Sair do menu Carrinho\n",
             ">> "
     };
     private Scanner teclado;
@@ -200,13 +200,16 @@ public class Principal {
                     produtos.forEach(produto -> {
                         Banco.adicionarCompras(this.usuario, produto, carrinho);
                     });
-
                     return;
                 case 2:
-                    System.out.println("Opção 2: cancelar carrinho");
+//                    System.out.println("Opção 2: cancelar carrinho");
+                    this.produtos.clear();
+                    return;
+                case 3:
+//                    System.out.println("Opção 3: sair");
                     break;
             }
-        } while (opcao != 2);
+        } while (opcao != 3);
     }
 
 
