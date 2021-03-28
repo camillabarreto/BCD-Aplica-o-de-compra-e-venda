@@ -14,8 +14,6 @@ public abstract class Banco {
             ResultSet rs = stmt.executeQuery();
             if (rs.next()){
                 usuario = new Usuario(id, rs.getString("nome"), cat);
-            }else {
-                System.out.println("ID INVÁLIDO");
             }
         } catch (SQLException throwables) {
             throwables.printStackTrace();
@@ -24,8 +22,8 @@ public abstract class Banco {
     }
 
     public static String listarProdutos(){
-        StringBuilder sb = new StringBuilder();
         String query = "SELECT * FROM Produto";
+        StringBuilder sb = new StringBuilder();
         PreparedStatement stmt = null;
         try {
             stmt = ConnectionFactory.getDBConnection().prepareStatement(query);
@@ -103,6 +101,54 @@ public abstract class Banco {
         try {
             stmt = ConnectionFactory.getDBConnection().prepareStatement(query);
             resultado = stmt.executeUpdate();
+
+        } catch (SQLException throwables) {
+            throwables.printStackTrace();
+        }
+        return resultado;
+    }
+
+    public static StringBuilder listarPedidos(int id){
+        String query = "SELECT * FROM Compra WHERE Produto_idVendedor="+id+""; //AND entrega=0
+        StringBuilder sb = null;
+        PreparedStatement stmt = null;
+        try {
+            stmt = ConnectionFactory.getDBConnection().prepareStatement(query);
+            ResultSet rs = stmt.executeQuery();
+            if (rs.next()) {
+                sb = new StringBuilder();
+                sb.append("------------------------------------------------------\n");
+                sb.append(String.format("|%-5s|%-35s|%10s|\n", "ID", "Produto", "Status"));
+                sb.append("------------------------------------------------------\n");
+                do {
+                    int idCompra = rs.getInt("idCompra");
+                    int idProduto = rs.getInt("Produto_idProduto");
+                    int entrega = rs.getInt("entrega");
+
+                    sb.append(String.format("|%-5d|%-35s|%10.2s|\n", idCompra, idProduto, entrega));
+
+                } while (rs.next());
+                sb.append("------------------------------------------------------\n");
+            }
+
+        } catch (SQLException throwables) {
+            throwables.printStackTrace();
+        }
+        return sb;
+    }
+
+    public static boolean marcarEntrega(int idCompra, int idVendedor){
+        boolean resultado=false;
+        String query = "SELECT * FROM Compra WHERE idCompra="+idCompra+" AND Produto_idVendedor="+idVendedor+"";
+        PreparedStatement stmt = null;
+        try {
+            stmt = ConnectionFactory.getDBConnection().prepareStatement(query);
+            ResultSet rs = stmt.executeQuery();
+            if (rs.next()) {
+                query = " UPDATE Compra SET entrega = 1 WHERE idCompra = "+idCompra+"";
+                stmt = ConnectionFactory.getDBConnection().prepareStatement(query);
+                resultado = stmt.executeUpdate()==1;
+            }
 
         } catch (SQLException throwables) {
             throwables.printStackTrace();

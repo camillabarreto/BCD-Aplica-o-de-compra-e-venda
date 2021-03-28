@@ -82,6 +82,24 @@ public class Principal {
             "3 - Sair do menu Carrinho\n",
             ">> "
     };
+    private final String[] PEDIDOS = {
+            ":::::::::::::::::::::::::\n",
+            ":::::::::::::::::::::::::\n",
+            "..::   SEUS PEDIDOS  ::..\n",
+            "1 - Entregar pedidos\n",
+            "2 - Sair do menu Pedidos\n",
+            ">> "
+    };
+    private final String[] ENTREGA = {
+            "\n:::::::::::::::::::::::::\n",
+            ":::::::::::::::::::::::::\n",
+            "..:: DIGITE O NÚMERO ::..\n",
+            "..::   DOS PEDIDOS   ::..\n",
+            "..:: QUE VOCÊ DESEJA ::..\n",
+            "..::     ENTREGAR    ::..\n",
+            " \n<<Separe por vírgulas>>\n",
+            ">> "
+    };
     private Scanner teclado;
     private Usuario usuario;
     private ArrayList<Produto> produtos;
@@ -106,12 +124,12 @@ public class Principal {
                 case 1:
                     if(this.autenticar(opcao)){
                         this.menuVendedor();
-                    }
+                    }else System.out.println("ID INVÁLIDO"); this.sleep();
                     break;
                 case 2:
                     if (this.autenticar(opcao)){
                         this.menuCliente();
-                    }
+                    }else System.out.println("ID INVÁLIDO"); this.sleep();
                     break;
                 case 3:
                     for (String linha : this.SAIDA) System.out.println(linha);
@@ -171,7 +189,7 @@ public class Principal {
 
 
     private void menuCarregandoCarrinho(){
-        for (String linha : this.CARREGAR_CARRINHO) System.out.print(linha);;
+        for (String linha : this.CARREGAR_CARRINHO) System.out.print(linha);
         String pd = this.teclado.next();
         StringBuilder sb = new StringBuilder();
         String[] pdv = pd.split(",");
@@ -223,14 +241,52 @@ public class Principal {
             opcao = this.teclado.nextInt();
             switch (opcao) {
                 case 1:
-                    System.out.println("Opção 1: ver pedidos");
+                    StringBuilder s = Banco.listarPedidos(usuario.getId());
+                    if(s!=null){
+                        System.out.println(s.toString());
+                        this.menuPedidos();
+                    }else{
+                        System.out.println("VOCÊ NÃO TEM PEDIDOS");
+                        this.sleep();
+                    }
                     break;
                 case 2:
-                    System.out.println("Opção 2: sair");
+//                    System.out.println("Opção 2: sair");
                     break;
             }
         } while (opcao != 2);
     }
+
+    private void menuPedidos(){
+        int opcao = -1;
+        do {
+            for (String linha : this.PEDIDOS) System.out.print(linha);
+            opcao = this.teclado.nextInt();
+            switch (opcao) {
+                case 1:
+//                    System.out.println("Opção 1: fazer entregas");
+                    this.menuEntregas();
+                    break;
+                case 2:
+//                    System.out.println("Opção 2: sair");
+                    break;
+            }
+        } while (opcao != 2);
+    }
+
+    private void menuEntregas(){
+        for (String linha : this.ENTREGA) System.out.print(linha);
+        String pd = this.teclado.next();
+        StringBuilder sb = new StringBuilder();
+        String[] pdv = pd.split(",");
+        for (int i = 0; i < pdv.length; i++) {
+            //verificar se pedido é valido
+            boolean resultado = Banco.marcarEntrega(Integer.parseInt(pdv[i]),usuario.getId());
+            if(!resultado) sb.append("\nINVÁLIDO: " + pdv[i]);
+        }
+//        if(sb.length()>0) System.out.println(sb.toString()); this.sleep();
+    }
+
 
 
     private boolean autenticar(int cat){
