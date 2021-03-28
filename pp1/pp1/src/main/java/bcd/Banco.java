@@ -14,9 +14,8 @@ public abstract class Banco {
             ResultSet rs = stmt.executeQuery();
             if (rs.next()){
                 usuario = new Usuario(id, rs.getString("nome"), cat);
-                System.out.println("\nVocê é "+usuario.getNome());
             }else {
-                System.out.println("Não existe esse id");
+                System.out.println("ID INVÁLIDO");
             }
         } catch (SQLException throwables) {
             throwables.printStackTrace();
@@ -106,7 +105,7 @@ public abstract class Banco {
                 System.out.println("\nCarrinho "+rs.getInt("idCarrinho"));
                 resultado=true;
             }else {
-                System.out.println("Carrinho vazio");
+                System.out.println("CARRINHO VAZIO");
             }
         } catch (SQLException throwables) {
             throwables.printStackTrace();

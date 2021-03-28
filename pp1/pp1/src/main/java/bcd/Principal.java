@@ -2,6 +2,7 @@ package bcd;
 
 import com.mysql.cj.protocol.x.XProtocolDecoder;
 
+import javax.management.timer.Timer;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
@@ -58,18 +59,22 @@ public class Principal {
             "..::   DISPONIVEIS   ::..\n\n"
     };
     private final String[] PRODUTOS_OP = {
-            ":::::::::::::::::::::::::\n",
-            ":::::::::::::::::::::::::\n\n",
+//            ":::::::::::::::::::::::::\n",
+//            ":::::::::::::::::::::::::\n\n",
             "1 - Colocar produtos\n",
             "    no seu carrinho\n",
             "2 - Sair do menu Ofertas\n\n",
             ">> "
     };
     private final String[] CARREGAR_CARRINHO = {
-            "1 - Digite o número dos \n",
-            "    produtos que deseja\n",
-            "    colocar no carrinho\n",
-            "   <<Separe por vírgulas>>\n",
+            ":::::::::::::::::::::::::\n",
+            ":::::::::::::::::::::::::\n",
+            "..:: DIGITE O NÚMERO ::..\n",
+            "..::  DOS PRODUTOS   ::..\n",
+            "..:: QUE VOCÊ DESEJA ::..\n",
+            "..::  COLOCAR NO SEU ::..\n",
+            "..::     CARRINHO    ::..\n",
+            " \n<<Separe por vírgulas>>\n",
             ">> "
     };
     private final String[] COMPRAR = {
@@ -125,14 +130,18 @@ public class Principal {
             opcao = this.teclado.nextInt();
             switch (opcao) {
                 case 1:
-                    System.out.println("Opção 1: ver ofertas");
+//                    System.out.println("Opção 1: ver ofertas");
                     this.menuProdutos();
-
                     break;
                 case 2:
-                    System.out.println("Opção 2: ver carrinho");
-                    this.verCarrinho();
-                    this.menuCarrinho();
+//                    System.out.println("Opção 2: ver carrinho");
+                    if (!this.produtos.isEmpty()){
+                        this.verCarrinho();
+                        this.menuCarrinho();
+                    }else{
+                        System.out.println("\nSEU CARRINHO ESTÁ VAZIO :(");
+                        this.sleep();
+                    }
                     break;
                 case 3:
                     for (String linha : this.SAIDA) System.out.println(linha);
@@ -151,11 +160,11 @@ public class Principal {
             opcao = this.teclado.nextInt();
             switch (opcao) {
                 case 1:
-                    System.out.println("Opção 1: escolha produtos");
+//                    System.out.println("Opção 1: escolha produtos");
                     this.menuCarregandoCarrinho();
                     return;
                 case 2:
-                    System.out.println("Opção 2: Voltar");
+//                    System.out.println("Opção 2: Voltar");
                     break;
             }
         } while (opcao != 2);
@@ -172,7 +181,7 @@ public class Principal {
             if (produto != null) {
                 this.produtos.add(produto);
             } else {
-                System.out.println("INVALIDO: " + pdv[i]);
+                System.out.println("INVÁLIDO: " + pdv[i]);
             }
         }
     }
@@ -184,7 +193,7 @@ public class Principal {
             opcao = this.teclado.nextInt();
             switch (opcao) {
                 case 1:
-                    System.out.println("Opção 1: confirmar compra");
+//                    System.out.println("Opção 1: confirmar compra");
                     LocalDateTime myDateObj = LocalDateTime.now();
                     String formattedData = myDateObj.format(myFormatObj);
                     int carrinho = Banco.adicionarCarrinho(this.usuario, formattedData);
@@ -249,5 +258,9 @@ public class Principal {
         }
         System.out.println("\nResultado = "+resultado);
         return resultado;
+    }
+
+    private void sleep(){
+        try { Thread.sleep (1000); } catch (InterruptedException ex) {}
     }
 }
