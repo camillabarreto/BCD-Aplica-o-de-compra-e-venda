@@ -147,11 +147,9 @@ public class Principal {
             opcao = this.teclado.nextInt();
             switch (opcao) {
                 case 1:
-//                    System.out.println("Opção 1: ver ofertas");
                     this.menuProdutos();
                     break;
                 case 2:
-//                    System.out.println("Opção 2: ver carrinho");
                     if (!this.produtos.isEmpty()){
                         this.verCarrinho();
                         this.menuCarrinho();
@@ -177,11 +175,9 @@ public class Principal {
             opcao = this.teclado.nextInt();
             switch (opcao) {
                 case 1:
-//                    System.out.println("Opção 1: escolha produtos");
                     this.menuCarregandoCarrinho();
                     return;
                 case 2:
-//                    System.out.println("Opção 2: Voltar");
                     break;
             }
         } while (opcao != 2);
@@ -194,7 +190,6 @@ public class Principal {
         StringBuilder sb = new StringBuilder();
         String[] pdv = pd.split(",");
         for (int i = 0; i < pdv.length; i++) {
-            //verificar se produto é valido
             Produto produto = Banco.procurarProduto(Integer.parseInt(pdv[i]));
             if (produto != null) {
                 this.produtos.add(produto);
@@ -212,7 +207,6 @@ public class Principal {
             opcao = this.teclado.nextInt();
             switch (opcao) {
                 case 1:
-//                    System.out.println("Opção 1: confirmar compra");
                     LocalDateTime myDateObj = LocalDateTime.now();
                     String formattedData = myDateObj.format(myFormatObj);
                     int carrinho = Banco.adicionarCarrinho(this.usuario, formattedData);
@@ -222,16 +216,13 @@ public class Principal {
                     this.produtos.clear();
                     return;
                 case 2:
-//                    System.out.println("Opção 2: cancelar carrinho");
                     this.produtos.clear();
                     return;
                 case 3:
-//                    System.out.println("Opção 3: sair");
                     break;
             }
         } while (opcao != 3);
     }
-
 
 
     private void menuVendedor(){
@@ -251,7 +242,7 @@ public class Principal {
                     }
                     break;
                 case 2:
-//                    System.out.println("Opção 2: sair");
+                    for (String linha : this.SAIDA) System.out.print(linha);
                     break;
             }
         } while (opcao != 2);
@@ -264,11 +255,9 @@ public class Principal {
             opcao = this.teclado.nextInt();
             switch (opcao) {
                 case 1:
-//                    System.out.println("Opção 1: fazer entregas");
                     this.menuEntregas();
                     break;
                 case 2:
-//                    System.out.println("Opção 2: sair");
                     break;
             }
         } while (opcao != 2);
@@ -280,14 +269,10 @@ public class Principal {
         StringBuilder sb = new StringBuilder();
         String[] pdv = pd.split(",");
         for (int i = 0; i < pdv.length; i++) {
-            //verificar se pedido é valido
             boolean resultado = Banco.marcarEntrega(Integer.parseInt(pdv[i]),usuario.getId());
             if(!resultado) sb.append("\nINVÁLIDO: " + pdv[i]);
         }
-//        if(sb.length()>0) System.out.println(sb.toString()); this.sleep();
     }
-
-
 
     private boolean autenticar(int cat){
         for (String linha : this.AUTENTICACAO) System.out.print(linha);
@@ -307,28 +292,6 @@ public class Principal {
         sb.append("------------------------------------------------------\n");
         System.out.println(sb.toString());
 
-    }
-
-
-    private int teste(){
-        int resultado = -1;
-        String query = "INSERT INTO Usuario (nome, Cat_Usuario_idCat_Usuario) VALUES ("
-                + "'Deborah'," + 2 + ")";
-
-        PreparedStatement stmt = null;
-        try {
-            stmt = ConnectionFactory.getDBConnection().prepareStatement(query);
-        } catch (SQLException throwables) {
-            throwables.printStackTrace();
-        }
-        // Executando instrução para atualizar a tabela no banco de dados
-        try {
-            resultado = stmt.executeUpdate(query);
-        } catch (SQLException throwables) {
-            throwables.printStackTrace();
-        }
-        System.out.println("\nResultado = "+resultado);
-        return resultado;
     }
 
     private void sleep(){

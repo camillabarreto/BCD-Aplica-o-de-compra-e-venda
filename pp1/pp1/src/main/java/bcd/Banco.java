@@ -109,7 +109,10 @@ public abstract class Banco {
     }
 
     public static StringBuilder listarPedidos(int id){
-        String query = "SELECT * FROM Compra WHERE Produto_idVendedor="+id+""; //AND entrega=0
+//        String query = "SELECT * FROM Compra WHERE Produto_idVendedor="+id+""; //AND entrega=0
+        String query = "SELECT C.idCompra, P.nome, C.entrega FROM Compra C"+
+                " NATURAL JOIN Produto P WHERE Produto_idVendedor="+id+
+                " AND C.Produto_idProduto=P.idProduto";
         StringBuilder sb = null;
         PreparedStatement stmt = null;
         try {
@@ -122,10 +125,10 @@ public abstract class Banco {
                 sb.append("------------------------------------------------------\n");
                 do {
                     int idCompra = rs.getInt("idCompra");
-                    int idProduto = rs.getInt("Produto_idProduto");
+                    String nome = rs.getString("nome");
                     int entrega = rs.getInt("entrega");
 
-                    sb.append(String.format("|%-5d|%-35s|%10.2s|\n", idCompra, idProduto, entrega));
+                    sb.append(String.format("|%-5d|%-35s|%10.2s|\n", idCompra, nome, entrega));
 
                 } while (rs.next());
                 sb.append("------------------------------------------------------\n");
