@@ -1,7 +1,5 @@
 package bcd;
 
-import com.mysql.cj.protocol.x.XProtocolDecoder;
-
 import javax.management.timer.Timer;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
